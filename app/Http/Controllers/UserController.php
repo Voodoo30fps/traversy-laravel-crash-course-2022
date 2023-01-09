@@ -35,6 +35,7 @@ class UserController extends Controller
         return redirect('/')->with('message', 'User craeted and logged in');
     }
 
+    // Log out user
     public function logout(Request $request)
     {
         auth()->logout();
@@ -43,5 +44,28 @@ class UserController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/')->with('message', 'You have been logged out!');
+    }
+
+    // Show Login Form
+    public function login()
+    {
+        return view('users.login');
+    }
+
+    // A User
+    public function authenticate(Request $request)
+    {
+        $formFields = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => 'required',
+        ]);
+
+        if (auth()->attempt($formFields)) {
+            $request->session()->regenerate();
+
+            return redirect('/')->with('message', 'You are now logged in!');
+        }
+
+        return back()->withErrors(['email' => 'Invalid Credentials'])->onlyInput('email');
     }
 }
