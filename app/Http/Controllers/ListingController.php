@@ -52,6 +52,8 @@ class ListingController extends Controller
             // dd($formFields['logo']);
         }
 
+        $formFields['user_id'] = auth()->id();
+
         Listing::create($formFields);
 
         return redirect('/')->with('message', 'Listing created successfully!');
